@@ -35,6 +35,10 @@ lazy val client = project
     libraryDependencies ++= Seq(
       "org.scala-js" %%% "scalajs-dom" % "0.9.6"
     ),
+    Compile / fastOptJS / artifactPath := (Compile / fastOptJS / target).value / ".." / "src" / "main" / "resources" / "public" / "worker.js",
+    Compile / fullOptJS / artifactPath := (Compile / fullOptJS / target).value / ".." / "src" / "main" / "resources" / "public" / "worker.js",
+    Compile / packageJSDependencies / artifactPath := (Compile / packageJSDependencies / target).value / ".." / "src" / "main" / "resources" / "public" / "worker.js",
+    Compile / packageMinifiedJSDependencies / artifactPath := (Compile / packageMinifiedJSDependencies / target).value / ".." / "src" / "main" / "resources" / "public" / "worker.js",
     scalaJSUseMainModuleInitializer := true
   )
   .dependsOn(common)

@@ -9,7 +9,7 @@ class App extends Component {
   }
 
   handleClick(input) {
-    const myWorker = new Worker('client-fastopt.js');
+    const myWorker = new Worker('worker.js');
     myWorker.postMessage(input);
     myWorker.onmessage = e => {
       this.setState({result: e.data});
