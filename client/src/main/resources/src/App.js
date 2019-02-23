@@ -1,15 +1,27 @@
 import React, {Component} from 'react';
 
 class App extends Component {
-  render() {
-    const myWorker = new Worker('client-fastopt.js');
-    myWorker.postMessage('test');
-    myWorker.onmessage = function (e) {
-      console.log(e.data);
-    }
+  constructor(props) {
+    super(props);
+    this.state = {
+      result: 'result',
+    };
+  }
 
+  handleClick(input) {
+    const myWorker = new Worker('client-fastopt.js');
+    myWorker.postMessage(input);
+    myWorker.onmessage = e => {
+      this.setState({result: e.data});
+    }
+  }
+
+  render() {
     return (
-      <div>App</div>
+      <>
+        <div onClick={() => this.handleClick(this.state.result)}>実行</div>
+        <div>{this.state.result}</div>
+      </>
     );
   }
 }

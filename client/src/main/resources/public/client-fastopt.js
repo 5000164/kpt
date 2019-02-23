@@ -1152,7 +1152,9 @@ $c_Ltutorial_webapp_TutorialApp$.prototype.main__AT__V = (function(args) {
   var self = $g;
   self.onmessage = (function($this, self$1) {
     return (function(e$2) {
-      var s = $objectToString(e$2.data);
+      var x = $objectToString(e$2.data);
+      var this$4 = new $c_sci_StringOps().init___T(x);
+      var s = $as_T($f_sc_IndexedSeqOptimized__dropRight__I__O(this$4, 1));
       return self$1.postMessage(s)
     })
   })(this, self)
@@ -1258,6 +1260,42 @@ $c_s_util_hashing_MurmurHash3.prototype.productHash__s_Product__I__I = (function
 $c_s_util_hashing_MurmurHash3.prototype.finalizeHash__I__I__I = (function(hash, length) {
   return this.avalanche__p1__I__I((hash ^ length))
 });
+/** @constructor */
+function $c_sci_StringOps$() {
+  $c_O.call(this)
+}
+$c_sci_StringOps$.prototype = new $h_O();
+$c_sci_StringOps$.prototype.constructor = $c_sci_StringOps$;
+/** @constructor */
+function $h_sci_StringOps$() {
+  /*<skip>*/
+}
+$h_sci_StringOps$.prototype = $c_sci_StringOps$.prototype;
+$c_sci_StringOps$.prototype.init___ = (function() {
+  return this
+});
+$c_sci_StringOps$.prototype.slice$extension__T__I__I__T = (function($$this, from, until) {
+  var start = ((from < 0) ? 0 : from);
+  if (((until <= start) || (start >= $uI($$this.length)))) {
+    return ""
+  };
+  var end = ((until > $uI($$this.length)) ? $uI($$this.length) : until);
+  return $as_T($$this.substring(start, end))
+});
+var $d_sci_StringOps$ = new $TypeData().initClass({
+  sci_StringOps$: 0
+}, false, "scala.collection.immutable.StringOps$", {
+  sci_StringOps$: 1,
+  O: 1
+});
+$c_sci_StringOps$.prototype.$classData = $d_sci_StringOps$;
+var $n_sci_StringOps$ = (void 0);
+function $m_sci_StringOps$() {
+  if ((!$n_sci_StringOps$)) {
+    $n_sci_StringOps$ = new $c_sci_StringOps$().init___()
+  };
+  return $n_sci_StringOps$
+}
 /** @constructor */
 function $c_sjsr_Bits$() {
   $c_O.call(this);
@@ -2605,6 +2643,64 @@ var $d_sjs_js_JavaScriptException = new $TypeData().initClass({
   s_Serializable: 1
 });
 $c_sjs_js_JavaScriptException.prototype.$classData = $d_sjs_js_JavaScriptException;
+function $f_sc_IndexedSeqOptimized__dropRight__I__O($thiz, n) {
+  return $thiz.slice__I__I__O(0, (($thiz.length__I() - ((n > 0) ? n : 0)) | 0))
+}
+/** @constructor */
+function $c_sci_StringOps() {
+  $c_O.call(this);
+  this.repr$1 = null
+}
+$c_sci_StringOps.prototype = new $h_O();
+$c_sci_StringOps.prototype.constructor = $c_sci_StringOps;
+/** @constructor */
+function $h_sci_StringOps() {
+  /*<skip>*/
+}
+$h_sci_StringOps.prototype = $c_sci_StringOps.prototype;
+$c_sci_StringOps.prototype.toString__T = (function() {
+  var $$this = this.repr$1;
+  return $$this
+});
+$c_sci_StringOps.prototype.slice__I__I__O = (function(from, until) {
+  return $m_sci_StringOps$().slice$extension__T__I__I__T(this.repr$1, from, until)
+});
+$c_sci_StringOps.prototype.length__I = (function() {
+  var $$this = this.repr$1;
+  return $uI($$this.length)
+});
+$c_sci_StringOps.prototype.hashCode__I = (function() {
+  var $$this = this.repr$1;
+  return $m_sjsr_RuntimeString$().hashCode__T__I($$this)
+});
+$c_sci_StringOps.prototype.init___T = (function(repr) {
+  this.repr$1 = repr;
+  return this
+});
+var $d_sci_StringOps = new $TypeData().initClass({
+  sci_StringOps: 0
+}, false, "scala.collection.immutable.StringOps", {
+  sci_StringOps: 1,
+  O: 1,
+  sci_StringLike: 1,
+  sc_IndexedSeqOptimized: 1,
+  sc_IndexedSeqLike: 1,
+  sc_SeqLike: 1,
+  sc_IterableLike: 1,
+  s_Equals: 1,
+  sc_TraversableLike: 1,
+  scg_HasNewBuilder: 1,
+  scg_FilterMonadic: 1,
+  sc_TraversableOnce: 1,
+  sc_GenTraversableOnce: 1,
+  sc_GenTraversableLike: 1,
+  sc_Parallelizable: 1,
+  sc_GenIterableLike: 1,
+  sc_GenSeqLike: 1,
+  s_math_Ordered: 1,
+  jl_Comparable: 1
+});
+$c_sci_StringOps.prototype.$classData = $d_sci_StringOps;
 $m_Ltutorial_webapp_TutorialApp$().main__AT__V($makeNativeArrayWrapper($d_T.getArrayOf(), []));
 }).call(this);
 //# sourceMappingURL=client-fastopt.js.map
