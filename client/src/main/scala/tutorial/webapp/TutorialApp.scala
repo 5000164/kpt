@@ -1,7 +1,14 @@
 package tutorial.webapp
 
+import org.scalajs.dom
+
+import scala.scalajs.js
+
 object TutorialApp {
   def main(args: Array[String]): Unit = {
-    println("Hello world!")
+    val self = js.Dynamic.global
+    self.onmessage = (e: dom.MessageEvent) => {
+      self.postMessage(e.data.toString)
+    }
   }
 }
