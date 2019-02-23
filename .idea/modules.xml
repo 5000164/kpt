@@ -2,9 +2,11 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/client/client.iml" filepath="$PROJECT_DIR$/client/client.iml" />
-      <module fileurl="file://$PROJECT_DIR$/server/.idea/modules/server.iml" filepath="$PROJECT_DIR$/server/.idea/modules/server.iml" />
-      <module fileurl="file://$PROJECT_DIR$/server/.idea/modules/server-build.iml" filepath="$PROJECT_DIR$/server/.idea/modules/server-build.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/client.iml" filepath="$PROJECT_DIR$/.idea/modules/client.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/common.iml" filepath="$PROJECT_DIR$/.idea/modules/common.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/kpt.iml" filepath="$PROJECT_DIR$/.idea/modules/kpt.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/kpt-build.iml" filepath="$PROJECT_DIR$/.idea/modules/kpt-build.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/server.iml" filepath="$PROJECT_DIR$/.idea/modules/server.iml" />
     </modules>
   </component>
 </project>

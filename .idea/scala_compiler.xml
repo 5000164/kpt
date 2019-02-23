@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ScalaCompilerConfiguration">
-    <profile name="sbt 1" modules="kpt,server">
+    <profile name="sbt 1" modules="kpt,kpt_1213" />
+    <profile name="sbt 2" modules="common,server">
       <option name="deprecationWarnings" value="true" />
       <option name="uncheckedWarnings" value="true" />
       <option name="featureWarnings" value="true" />
@@ -9,6 +10,16 @@
         <parameter value="-Xlint" />
       </parameters>
     </profile>
-    <profile name="sbt 2" modules="Development-kpt,kpt_905,server_2217,server_4324,server_6456,server_6944,server_8796,server_9838" />
+    <profile name="sbt 3" modules="client">
+      <option name="deprecationWarnings" value="true" />
+      <option name="uncheckedWarnings" value="true" />
+      <option name="featureWarnings" value="true" />
+      <parameters>
+        <parameter value="-Xlint" />
+      </parameters>
+      <plugins>
+        <plugin path="$USER_HOME$/.ivy2/cache/org.scala-js/scalajs-compiler_2.12.8/jars/scalajs-compiler_2.12.8-0.6.26.jar" />
+      </plugins>
+    </profile>
   </component>
 </project>
