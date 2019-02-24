@@ -1,4 +1,4 @@
-package tutorial.webapp
+package interfaces
 
 import com.softwaremill.sttp._
 import org.scalajs.dom
@@ -8,7 +8,7 @@ import scala.concurrent.Future
 import scala.scalajs.js
 import scala.util.{Failure, Success}
 
-object TutorialApp {
+object Application {
   def main(args: Array[String]): Unit = {
     implicit val sttpBackend: SttpBackend[Future, Nothing] = FetchBackend()
 
