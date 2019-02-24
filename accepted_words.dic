@@ -2,3 +2,5 @@ Xlint
 typesafe
 materializer
 scalajs
+softwaremill
+sttp

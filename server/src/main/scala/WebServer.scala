@@ -1,6 +1,5 @@
 import akka.actor.ActorSystem
 import akka.http.scaladsl.Http
-import akka.http.scaladsl.model._
 import akka.http.scaladsl.server.Directives._
 import akka.stream.ActorMaterializer
 
@@ -9,22 +8,24 @@ import scala.io.StdIn
 
 object WebServer {
   def main(args: Array[String]) {
-
-    implicit val system: ActorSystem = ActorSystem("my-system")
+    implicit val system: ActorSystem = ActorSystem()
     implicit val materializer: ActorMaterializer = ActorMaterializer()
     implicit val executionContext: ExecutionContextExecutor = system.dispatcher
 
     val route =
-      path("hello") {
-        get {
-          complete(
-            HttpEntity(
-              ContentTypes.`text/html(UTF-8)`,
-              "<h1>Say hello to akka-http</h1>"
-            )
-          )
+      pathEndOrSingleSlash {
+        getFromFile("client/src/main/resources/build/index.html")
+      } ~
+        pathPrefix("") {
+          getFromDirectory("client/src/main/resources/build")
+        } ~
+        post {
+          pathPrefix("api") {
+            path("get_random_string") {
+              complete(scala.util.Random.alphanumeric.take(10).mkString)
+            }
+          }
         }
-      }
 
     val bindingFuture = Http().bindAndHandle(route, "localhost", 8080)
 

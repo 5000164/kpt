@@ -8,10 +8,17 @@ class App extends Component {
     };
   }
 
+  componentDidMount() {
+    this.worker = new Worker('worker.js');
+  };
+
+  componentWillUnmount() {
+    this.worker.terminate();
+  }
+
   handleClick(input) {
-    const myWorker = new Worker('client-fastopt.js');
-    myWorker.postMessage(input);
-    myWorker.onmessage = e => {
+    this.worker.postMessage(input);
+    this.worker.onmessage = e => {
       this.setState({result: e.data});
     }
   }
