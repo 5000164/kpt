@@ -18,6 +18,13 @@ object WebServer {
       } ~
         pathPrefix("") {
           getFromDirectory("client/src/main/resources/build")
+        } ~
+        post {
+          pathPrefix("api") {
+            path("get_random_string") {
+              complete(scala.util.Random.alphanumeric.take(10).mkString)
+            }
+          }
         }
 
     val bindingFuture = Http().bindAndHandle(route, "localhost", 8080)
