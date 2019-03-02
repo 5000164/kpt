@@ -4,12 +4,15 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      result: 'result',
+      result: '',
     };
   }
 
   componentDidMount() {
     this.worker = new Worker('worker.js');
+    this.worker.onmessage = e => {
+      this.setState({result: e.data});
+    }
   };
 
   componentWillUnmount() {
@@ -18,9 +21,6 @@ class App extends Component {
 
   handleClick(input) {
     this.worker.postMessage(input);
-    this.worker.onmessage = e => {
-      this.setState({result: e.data});
-    }
   }
 
   render() {
