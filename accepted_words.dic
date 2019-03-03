@@ -2,5 +2,7 @@ Xlint
 typesafe
 materializer
 scalajs
-softwaremill
-sttp
+thesamet
+protoc
+scalapb
+compilerplugin

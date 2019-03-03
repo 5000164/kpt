@@ -4,7 +4,10 @@ ThisBuild / version := "0.1.0-SNAPSHOT"
 
 lazy val common = project
   .settings(
-    name := "common"
+    name := "common",
+    PB.targets in Compile := Seq(
+      scalapb.gen() -> (sourceManaged in Compile).value
+    )
   )
 
 lazy val server = project
