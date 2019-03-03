@@ -6,7 +6,7 @@ lazy val common = project
   .settings(
     name := "common",
     PB.targets in Compile := Seq(
-      scalapb.gen() -> (sourceManaged in Compile).value
+      scalapb.gen(grpc = false) -> (sourceManaged in Compile).value
     )
   )
 
