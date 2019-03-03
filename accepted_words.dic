@@ -6,3 +6,5 @@ thesamet
 protoc
 scalapb
 compilerplugin
+protobuf
+crossproject

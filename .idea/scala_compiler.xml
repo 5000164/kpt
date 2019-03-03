@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ScalaCompilerConfiguration">
-    <profile name="sbt 1" modules="common,kpt,kpt_1213" />
-    <profile name="sbt 2" modules="client">
+    <option name="incrementalityType" value="SBT" />
+    <profile name="sbt 1" modules=".jvm-proto,common,kpt,kpt_1213" />
+    <profile name="sbt 2" modules=".js-proto,client">
       <plugins>
         <plugin path="$USER_HOME$/.ivy2/cache/org.scala-js/scalajs-compiler_2.12.8/jars/scalajs-compiler_2.12.8-0.6.26.jar" />
       </plugins>
