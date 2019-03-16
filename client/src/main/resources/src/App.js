@@ -4,6 +4,7 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      input: '',
       result: '',
     };
   }
@@ -19,14 +20,19 @@ class App extends Component {
     this.worker.terminate();
   }
 
-  handleClick(input) {
-    this.worker.postMessage(input);
+  handleChange = (event) => {
+    this.setState({input: event.target.value});
+  }
+
+  handleClick = () => {
+    this.worker.postMessage(this.state.input);
   }
 
   render() {
     return (
       <>
-        <div onClick={() => this.handleClick(this.state.result)}>実行</div>
+        <input type="text" value={this.state.input} onChange={this.handleChange}/>
+        <div onClick={this.handleClick}>送信</div>
         <div>{this.state.result}</div>
       </>
     );

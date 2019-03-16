@@ -9,8 +9,10 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/client" />
-            <option value="$PROJECT_DIR$/common" />
             <option value="$PROJECT_DIR$/project" />
+            <option value="$PROJECT_DIR$/proto" />
+            <option value="$PROJECT_DIR$/proto/.js" />
+            <option value="$PROJECT_DIR$/proto/.jvm" />
             <option value="$PROJECT_DIR$/server" />
           </set>
         </option>

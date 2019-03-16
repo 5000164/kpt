@@ -1,11 +1,23 @@
+import sbtcrossproject.CrossPlugin.autoImport.{CrossType, crossProject}
+
 ThisBuild / organization := "jp.5000164"
 ThisBuild / scalaVersion := "2.12.8"
 ThisBuild / version := "0.1.0-SNAPSHOT"
 
-lazy val common = project
+lazy val proto = crossProject(JVMPlatform, JSPlatform)
+  .crossType(CrossType.Pure)
   .settings(
-    name := "common"
+    PB.targets in Compile := Seq(
+      scalapb.gen(grpc = false) -> (sourceManaged in Compile).value
+    ),
+    PB.protoSources in Compile := Seq(file("proto/src/main/protobuf")),
+    libraryDependencies ++= Seq(
+      "com.thesamet.scalapb" %%% "scalapb-runtime" % scalapb.compiler.Version.scalapbVersion // ,
+    )
   )
+
+lazy val protoJVM = proto.jvm
+lazy val protoJS = proto.js
 
 lazy val server = project
   .settings(
@@ -16,7 +28,7 @@ lazy val server = project
     ),
     scalacOptions ++= Seq("-deprecation", "-feature", "-unchecked", "-Xlint")
   )
-  .dependsOn(common)
+  .dependsOn(protoJVM)
 
 lazy val client = project
   .enablePlugins(ScalaJSPlugin)
@@ -32,4 +44,4 @@ lazy val client = project
     Compile / packageMinifiedJSDependencies / artifactPath := (Compile / packageMinifiedJSDependencies / target).value / ".." / "src" / "main" / "resources" / "public" / "worker.js",
     scalaJSUseMainModuleInitializer := true
   )
-  .dependsOn(common)
+  .dependsOn(protoJS)

@@ -2,5 +2,10 @@ Xlint
 typesafe
 materializer
 scalajs
-softwaremill
-sttp
+thesamet
+protoc
+scalapb
+compilerplugin
+protobuf
+crossproject
+arraybuffer
