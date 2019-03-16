@@ -2,10 +2,11 @@ import java.util.UUID
 
 import akka.actor.{Actor, ActorRef, ActorSystem, Props}
 import akka.http.scaladsl.Http
-import akka.http.scaladsl.model.ws.{Message, TextMessage}
+import akka.http.scaladsl.model.ws.{BinaryMessage, Message, TextMessage}
 import akka.http.scaladsl.server.Directives._
 import akka.stream.scaladsl.{Flow, GraphDSL, Merge, Sink, Source}
 import akka.stream.{ActorMaterializer, FlowShape, OverflowStrategy}
+import myproto.item.Item
 
 import scala.collection.mutable
 import scala.concurrent.ExecutionContextExecutor
@@ -22,26 +23,21 @@ object WebServer {
 
     class BroadcastActor extends Actor {
       val subscribers = mutable.HashMap.empty[String, ActorRef]
-      var count = 0
 
       def receive: Receive = {
-        case Subscribe(id, actorRef) =>
-          subscribers += ((id, actorRef))
-          subscribers.values.foreach(_ ! count.toString)
+        case Subscribe(id, actorRef) => subscribers += ((id, actorRef))
         case UnSubscribe(id) => subscribers -= id
-        case _ =>
-          count = count + 1
-          subscribers.values.foreach(_ ! count.toString)
+        case content => subscribers.values.foreach(_ ! content)
       }
     }
     val broadcastActor = system.actorOf(Props[BroadcastActor])
 
-    def flow: Flow[Message, TextMessage.Strict, ActorRef] = {
+    def flow: Flow[Message, Message, Any] = {
       Flow.fromGraph(GraphDSL.create(Source.actorRef[String](bufferSize = 3, OverflowStrategy.fail)) { implicit builder => subscribeActor =>
         import GraphDSL.Implicits._
 
         val websocketSource = builder.add(Flow[Message].map {
-          case TextMessage.Strict(message) => message.toString
+          case BinaryMessage.Strict(message) => Item.parseFrom(message.toArray).content
         })
         val uuid = UUID.randomUUID().toString
         val connActorSource = builder.materializedValue.map[Any](Subscribe(uuid, _))
