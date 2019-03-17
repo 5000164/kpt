@@ -1,12 +1,11 @@
 import React, {Component} from 'react';
 
-class App extends Component {
+class Board extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      input: '',
-      result: '',
-    };
+      groups: Array(3).fill(''),
+    }
   }
 
   componentDidMount() {
@@ -14,29 +13,51 @@ class App extends Component {
     this.worker.onmessage = e => {
       this.setState({result: e.data});
     }
-  };
+  }
 
   componentWillUnmount() {
     this.worker.terminate();
   }
 
-  handleChange = (event) => {
-    this.setState({input: event.target.value});
+  handleChange(event, i) {
+    const groups = this.state.groups.slice();
+    groups[i] = event.target.value
+    this.setState({groups: groups});
   }
 
-  handleClick = () => {
-    this.worker.postMessage(this.state.input);
+  handleClick() {
+    this.worker.postMessage(this.state.groups);
   }
 
   render() {
     return (
       <>
-        <input type="text" value={this.state.input} onChange={this.handleChange}/>
+        <Group value={this.state.groups[0]} handleChange={(e) => this.handleChange(e, 0)}/>
+        <Group value={this.state.groups[1]} handleChange={(e) => this.handleChange(e, 1)}/>
+        <Group value={this.state.groups[2]} handleChange={(e) => this.handleChange(e, 2)}/>
         <div onClick={this.handleClick}>送信</div>
-        <div>{this.state.result}</div>
+        <div>{this.state.groups[0]}</div>
+        <div>{this.state.groups[1]}</div>
+        <div>{this.state.groups[2]}</div>
       </>
-    );
+    )
   }
 }
 
-export default App;
+class Group extends Component {
+  render() {
+    return (
+      <InputField value={this.props.value} handleChange={this.props.handleChange}/>
+    )
+  }
+}
+
+class InputField extends Component {
+  render() {
+    return (
+      <input type="text" value={this.props.value} onChange={this.props.handleChange}/>
+    )
+  }
+}
+
+export default Board;
