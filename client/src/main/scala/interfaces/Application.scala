@@ -4,7 +4,6 @@ import myproto.item.Item
 import org.scalajs.dom
 
 import scala.scalajs.js
-import scala.scalajs.js.typedarray
 
 object Application {
   def main(args: Array[String]): Unit = {
@@ -14,11 +13,14 @@ object Application {
 
     self.onmessage = (input: dom.MessageEvent) => {
       val item = Item(input.data.toString)
-      socket.send(typedarray.byteArray2Int8Array(item.toByteArray).buffer)
+      socket.send(js.typedarray.byteArray2Int8Array(item.toByteArray).buffer)
     }
 
     socket.onmessage = { e: dom.MessageEvent =>
-      self.postMessage(e.data.toString)
+      val item = e.data match {
+        case buf: js.typedarray.ArrayBuffer => Item.parseFrom(js.typedarray.int8Array2ByteArray(new js.typedarray.Int8Array(buf)))
+      }
+      self.postMessage(item.content)
     }
   }
 }
