@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import {client} from './modules/bundle';
 
 class Board extends Component {
   constructor(props) {
@@ -11,7 +12,10 @@ class Board extends Component {
   componentDidMount() {
     this.worker = new Worker('worker.js');
     this.worker.onmessage = e => {
-      this.setState({result: e.data});
+      const groups = client.Groups.decode(e.data);
+      // To avoid undefined.
+      for (let i = 0; i < 3; i++) groups.content[i] = groups.content[i] || ''
+      this.setState({groups: groups.content});
     }
   }
 
@@ -23,10 +27,13 @@ class Board extends Component {
     const groups = this.state.groups.slice();
     groups[i] = event.target.value
     this.setState({groups: groups});
-  }
 
-  handleClick() {
-    this.worker.postMessage(this.state.groups);
+    const message = client.Groups.create({content: groups})
+    // I make a new object to use transfer.
+    // If I don't copy, an error happens in the second time (because of a buffer pool probably).
+    // See https://qiita.com/Quramy/items/8c12e6c3ad208c97c99a about performance.
+    const data = new Uint8Array(client.Groups.encode(message).finish());
+    this.worker.postMessage(data, [data.buffer]);
   }
 
   render() {
@@ -35,10 +42,6 @@ class Board extends Component {
         <Group value={this.state.groups[0]} handleChange={(e) => this.handleChange(e, 0)}/>
         <Group value={this.state.groups[1]} handleChange={(e) => this.handleChange(e, 1)}/>
         <Group value={this.state.groups[2]} handleChange={(e) => this.handleChange(e, 2)}/>
-        <div onClick={this.handleClick}>送信</div>
-        <div>{this.state.groups[0]}</div>
-        <div>{this.state.groups[1]}</div>
-        <div>{this.state.groups[2]}</div>
       </>
     )
   }

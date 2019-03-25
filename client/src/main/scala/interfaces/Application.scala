@@ -1,5 +1,6 @@
 package interfaces
 
+import client.groups.Groups
 import myproto.item.Item
 import org.scalajs.dom
 
@@ -11,8 +12,14 @@ object Application {
     val socket = new dom.WebSocket("ws://127.0.0.1:8080/connect")
     socket.binaryType = "arraybuffer"
 
-    self.onmessage = (input: dom.MessageEvent) => {
-      val item = Item(input.data.toString)
+    self.onmessage = (event: dom.MessageEvent) => {
+      val data = event.data.asInstanceOf[js.typedarray.Uint8Array]
+      // To use int8Array2ByteArray function.
+      // I think that probably Protocol Buffers doesn't care about defined or undefined.
+      // (Probably) An important thing is a binary array.
+      val intData = new js.typedarray.Int8Array(data)
+      val groups = Groups.parseFrom(js.typedarray.int8Array2ByteArray(intData))
+      val item = Item(groups.content)
       socket.send(js.typedarray.byteArray2Int8Array(item.toByteArray).buffer)
     }
 
@@ -20,7 +27,10 @@ object Application {
       val item = e.data match {
         case buf: js.typedarray.ArrayBuffer => Item.parseFrom(js.typedarray.int8Array2ByteArray(new js.typedarray.Int8Array(buf)))
       }
-      self.postMessage(item.content)
+      val groups = Groups(item.content)
+      val intData = js.typedarray.byteArray2Int8Array(groups.toByteArray)
+      val data = new js.typedarray.Uint8Array(intData)
+      self.postMessage(data, js.Array(data.buffer))
     }
   }
 }
