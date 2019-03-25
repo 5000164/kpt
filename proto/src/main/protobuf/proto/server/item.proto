@@ -1,7 +1,7 @@
 syntax = "proto3";
 
-package proto.client;
+package proto.server;
 
-message Groups {
+message Item {
     repeated string content = 1;
 }

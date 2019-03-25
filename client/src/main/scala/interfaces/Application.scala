@@ -1,8 +1,8 @@
 package interfaces
 
-import client.groups.Groups
-import myproto.item.Item
 import org.scalajs.dom
+import proto.client.groups.Groups
+import proto.server.item.Item
 
 import scala.scalajs.js
 

@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {client} from './modules/bundle';
+import {proto} from './modules/bundle';
 
 class Board extends Component {
   constructor(props) {
@@ -12,7 +12,7 @@ class Board extends Component {
   componentDidMount() {
     this.worker = new Worker('worker.js');
     this.worker.onmessage = e => {
-      const groups = client.Groups.decode(e.data);
+      const groups = proto.client.Groups.decode(e.data);
       // To avoid undefined.
       for (let i = 0; i < 3; i++) groups.content[i] = groups.content[i] || ''
       this.setState({groups: groups.content});
@@ -28,11 +28,11 @@ class Board extends Component {
     groups[i] = event.target.value
     this.setState({groups: groups});
 
-    const message = client.Groups.create({content: groups})
+    const message = proto.client.Groups.create({content: groups})
     // I make a new object to use transfer.
     // If I don't copy, an error happens in the second time (because of a buffer pool probably).
     // See https://qiita.com/Quramy/items/8c12e6c3ad208c97c99a about performance.
-    const data = new Uint8Array(client.Groups.encode(message).finish());
+    const data = new Uint8Array(proto.client.Groups.encode(message).finish());
     this.worker.postMessage(data, [data.buffer]);
   }
 

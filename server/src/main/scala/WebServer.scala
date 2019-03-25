@@ -7,7 +7,7 @@ import akka.http.scaladsl.server.Directives._
 import akka.stream.scaladsl.{Flow, GraphDSL, Merge, Sink, Source}
 import akka.stream.{ActorMaterializer, FlowShape, OverflowStrategy}
 import akka.util.ByteString
-import myproto.item.Item
+import proto.server.item.Item
 
 import scala.collection.mutable
 import scala.concurrent.ExecutionContextExecutor
