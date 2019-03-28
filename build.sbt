@@ -17,7 +17,7 @@ lazy val proto = crossProject(JVMPlatform, JSPlatform)
   )
 
 lazy val protoJVM = proto.jvm
-lazy val protoJS = proto.js
+lazy val protoJS  = proto.js
 
 lazy val server = project
   .settings(
