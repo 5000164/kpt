@@ -37,7 +37,7 @@ lazy val client = project
     libraryDependencies ++= Seq(
       "org.scala-js" %%% "scalajs-dom" % "0.9.6"
     ),
-    excludeFilter in unmanagedResources := "*worker*",
+    excludeFilter in unmanagedResources := ((Compile / baseDirectory).value / "src" / "main" / "resources").getName,
     Compile / fastOptJS / artifactPath := (Compile / fastOptJS / target).value / ".." / "src" / "main" / "resources" / "public" / "worker.js",
     Compile / fullOptJS / artifactPath := (Compile / fullOptJS / target).value / ".." / "src" / "main" / "resources" / "public" / "worker.js",
     Compile / packageJSDependencies / artifactPath := (Compile / packageJSDependencies / target).value / ".." / "src" / "main" / "resources" / "public" / "worker.js",
