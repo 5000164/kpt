@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import {proto} from './modules/bundle';
+import styled from 'styled-components'
 
 class Board extends Component {
   constructor(props) {
@@ -38,29 +39,49 @@ class Board extends Component {
 
   render() {
     return (
-      <>
+      <Wrapper>
         <Group value={this.state.groups[0]} handleChange={(e) => this.handleChange(e, 0)}/>
         <Group value={this.state.groups[1]} handleChange={(e) => this.handleChange(e, 1)}/>
         <Group value={this.state.groups[2]} handleChange={(e) => this.handleChange(e, 2)}/>
-      </>
+      </Wrapper>
     )
   }
 }
 
+const Wrapper = styled.div`
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+`;
+
 class Group extends Component {
+  constructor(props) {
+    super(props);
+    this.ref = React.createRef();
+  }
+
   render() {
     return (
-      <InputField value={this.props.value} handleChange={this.props.handleChange}/>
+      <StyledGroup ref={this.ref}>
+        <InputField value={this.props.value} handleChange={this.props.handleChange}/>
+      </StyledGroup>
     )
   }
 }
+
+const StyledGroup = styled.div`
+  margin: 4px;
+`;
 
 class InputField extends Component {
   render() {
     return (
-      <input type="text" value={this.props.value} onChange={this.props.handleChange}/>
+      <StyledInput type="text" value={this.props.value} onChange={this.props.handleChange}/>
     )
   }
 }
+
+const StyledInput = styled.input`
+  width: 100%;
+`;
 
 export default Board;
