@@ -1,6 +1,12 @@
 import React, {Component} from 'react';
 import {proto} from './modules/bundle';
-import styled from 'styled-components'
+import styled, {createGlobalStyle} from 'styled-components'
+
+const GlobalStyle = createGlobalStyle`
+  body {
+    margin: 0;
+  }
+`
 
 class Board extends Component {
   constructor(props) {
@@ -39,11 +45,14 @@ class Board extends Component {
 
   render() {
     return (
-      <Wrapper>
-        <Group value={this.state.groups[0]} handleChange={(e) => this.handleChange(e, 0)}/>
-        <Group value={this.state.groups[1]} handleChange={(e) => this.handleChange(e, 1)}/>
-        <Group value={this.state.groups[2]} handleChange={(e) => this.handleChange(e, 2)}/>
-      </Wrapper>
+      <>
+        <GlobalStyle/>
+        <Wrapper>
+          <Group value={this.state.groups[0]} handleChange={(e) => this.handleChange(e, 0)}/>
+          <Group value={this.state.groups[1]} handleChange={(e) => this.handleChange(e, 1)}/>
+          <Group value={this.state.groups[2]} handleChange={(e) => this.handleChange(e, 2)}/>
+        </Wrapper>
+      </>
     )
   }
 }
