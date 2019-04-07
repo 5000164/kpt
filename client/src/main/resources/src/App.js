@@ -60,6 +60,8 @@ class Board extends Component {
 const Wrapper = styled.div`
   display: grid;
   grid-template-columns: repeat(3, 1fr);
+  grid-gap: 4px;
+  margin: 4px;
 `;
 
 class Group extends Component {
@@ -78,7 +80,7 @@ class Group extends Component {
 }
 
 const StyledGroup = styled.div`
-  margin: 4px;
+  width: 100%;
 `;
 
 class InputField extends Component {
@@ -90,6 +92,7 @@ class InputField extends Component {
 }
 
 const StyledInput = styled.input`
+  box-sizing: border-box;
   width: 100%;
 `;
 
