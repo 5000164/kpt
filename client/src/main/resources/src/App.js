@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {proto} from './modules/bundle';
-import styled, {createGlobalStyle} from 'styled-components'
+import styled, {createGlobalStyle} from 'styled-components';
 
 const GlobalStyle = createGlobalStyle`
   body {
@@ -12,17 +12,20 @@ class Board extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      groups: Array(3).fill(''),
-    }
+      groups: {
+        keep: [''],
+        problem: [''],
+        try: [''],
+      },
+    };
+    this.handleChange = this.handleChange.bind(this);
   }
 
   componentDidMount() {
     this.worker = new Worker('worker.js');
     this.worker.onmessage = e => {
       const groups = proto.client.Groups.decode(e.data);
-      // To avoid undefined.
-      for (let i = 0; i < 3; i++) groups.content[i] = groups.content[i] || ''
-      this.setState({groups: groups.content});
+      this.setState({groups: groups});
     }
   }
 
@@ -30,12 +33,14 @@ class Board extends Component {
     this.worker.terminate();
   }
 
-  handleChange(event, i) {
-    const groups = this.state.groups.slice();
-    groups[i] = event.target.value
+  handleChange(event, name, i) {
+    const groups = this.state.groups;
+    const values = groups[name].slice();
+    values[i] = event.target.value;
+    groups[name] = values;
     this.setState({groups: groups});
 
-    const message = proto.client.Groups.create({content: groups})
+    const message = proto.client.Groups.create({keep: groups.keep, problem: groups.problem, try: groups.try});
     // I make a new object to use transfer.
     // If I don't copy, an error happens in the second time (because of a buffer pool probably).
     // See https://qiita.com/Quramy/items/8c12e6c3ad208c97c99a about performance.
@@ -48,9 +53,9 @@ class Board extends Component {
       <>
         <GlobalStyle/>
         <Wrapper>
-          <Group value={this.state.groups[0]} handleChange={(e) => this.handleChange(e, 0)}/>
-          <Group value={this.state.groups[1]} handleChange={(e) => this.handleChange(e, 1)}/>
-          <Group value={this.state.groups[2]} handleChange={(e) => this.handleChange(e, 2)}/>
+          <Group name={'keep'} value={this.state.groups['keep']} handleChange={this.handleChange}/>
+          <Group name={'problem'} value={this.state.groups['problem']} handleChange={this.handleChange}/>
+          <Group name={'try'} value={this.state.groups['try']} handleChange={this.handleChange}/>
         </Wrapper>
       </>
     )
@@ -73,7 +78,8 @@ class Group extends Component {
   render() {
     return (
       <StyledGroup ref={this.ref}>
-        <InputField value={this.props.value} handleChange={this.props.handleChange}/>
+        <h1>{this.props.name}</h1>
+        <InputField value={this.props.value} handleChange={(e) => this.props.handleChange(e, this.props.name, 0)}/>
       </StyledGroup>
     )
   }

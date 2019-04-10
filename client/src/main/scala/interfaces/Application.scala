@@ -19,7 +19,7 @@ object Application {
       // (Probably) An important thing is a binary array.
       val intData = new js.typedarray.Int8Array(data)
       val groups  = Groups.parseFrom(js.typedarray.int8Array2ByteArray(intData))
-      val item    = Item(groups.content)
+      val item    = Item(groups.keep, groups.problem, groups.`try`)
       socket.send(js.typedarray.byteArray2Int8Array(item.toByteArray).buffer)
     }
 
@@ -27,7 +27,7 @@ object Application {
       val item = e.data match {
         case buf: js.typedarray.ArrayBuffer => Item.parseFrom(js.typedarray.int8Array2ByteArray(new js.typedarray.Int8Array(buf)))
       }
-      val groups  = Groups(item.content)
+      val groups  = Groups(item.keep, item.problem, item.`try`)
       val intData = js.typedarray.byteArray2Int8Array(groups.toByteArray)
       val data    = new js.typedarray.Uint8Array(intData)
       self.postMessage(data, js.Array(data.buffer))

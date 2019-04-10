@@ -3,5 +3,7 @@ syntax = "proto3";
 package proto.client;
 
 message Groups {
-    repeated string content = 1;
+    repeated string keep = 1;
+    repeated string problem = 2;
+    repeated string try = 3;
 }
