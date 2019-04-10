@@ -19,6 +19,8 @@ class Board extends Component {
       },
     };
     this.handleChange = this.handleChange.bind(this);
+    this.handleKeyDown = this.handleKeyDown.bind(this);
+    this.handleClick = this.handleClick.bind(this);
   }
 
   componentDidMount() {
@@ -48,14 +50,49 @@ class Board extends Component {
     this.worker.postMessage(data, [data.buffer]);
   }
 
+  handleKeyDown(event, name) {
+    if (event.key === 'Enter') {
+      const groups = this.state.groups;
+      const values = groups[name];
+      values.push('');
+      groups[name] = values;
+      this.setState({groups: groups});
+
+      const message = proto.client.Groups.create({keep: groups.keep, problem: groups.problem, try: groups.try});
+      // I make a new object to use transfer.
+      // If I don't copy, an error happens in the second time (because of a buffer pool probably).
+      // See https://qiita.com/Quramy/items/8c12e6c3ad208c97c99a about performance.
+      const data = new Uint8Array(proto.client.Groups.encode(message).finish());
+      this.worker.postMessage(data, [data.buffer]);
+    }
+  }
+
+  handleClick(event, name, i) {
+    const groups = this.state.groups;
+    const values = groups[name];
+    values.splice(i, 1);
+    groups[name] = values;
+    this.setState({groups: groups});
+
+    const message = proto.client.Groups.create({keep: groups.keep, problem: groups.problem, try: groups.try});
+    // I make a new object to use transfer.
+    // If I don't copy, an error happens in the second time (because of a buffer pool probably).
+    // See https://qiita.com/Quramy/items/8c12e6c3ad208c97c99a about performance.
+    const data = new Uint8Array(proto.client.Groups.encode(message).finish());
+    this.worker.postMessage(data, [data.buffer]);
+  }
+
   render() {
     return (
       <>
         <GlobalStyle/>
         <Wrapper>
-          <Group name={'keep'} value={this.state.groups['keep']} handleChange={this.handleChange}/>
-          <Group name={'problem'} value={this.state.groups['problem']} handleChange={this.handleChange}/>
-          <Group name={'try'} value={this.state.groups['try']} handleChange={this.handleChange}/>
+          <Group name={'keep'} value={this.state.groups['keep']} handleChange={this.handleChange}
+                 handleKeyDown={this.handleKeyDown} handleClick={this.handleClick}/>
+          <Group name={'problem'} value={this.state.groups['problem']} handleChange={this.handleChange}
+                 handleKeyDown={this.handleKeyDown} handleClick={this.handleClick}/>
+          <Group name={'try'} value={this.state.groups['try']} handleChange={this.handleChange}
+                 handleKeyDown={this.handleKeyDown} handleClick={this.handleClick}/>
         </Wrapper>
       </>
     )
@@ -79,7 +116,12 @@ class Group extends Component {
     return (
       <StyledGroup ref={this.ref}>
         <h1>{this.props.name}</h1>
-        <InputField value={this.props.value} handleChange={(e) => this.props.handleChange(e, this.props.name, 0)}/>
+        {this.props.value.map((content, i) => {
+          return <InputField key={i} value={content}
+                             handleChange={(e) => this.props.handleChange(e, this.props.name, i)}
+                             handleKeyDown={(e) => this.props.handleKeyDown(e, this.props.name)}
+                             handleClick={(e) => this.props.handleClick(e, this.props.name, i)}/>
+        })}
       </StyledGroup>
     )
   }
@@ -92,14 +134,18 @@ const StyledGroup = styled.div`
 class InputField extends Component {
   render() {
     return (
-      <StyledInput type="text" value={this.props.value} onChange={this.props.handleChange}/>
+      <>
+        <StyledInput type="text" value={this.props.value} onChange={this.props.handleChange}
+                     onKeyDown={this.props.handleKeyDown}/>
+        <span onClick={this.props.handleClick}>x</span>
+      </>
     )
   }
 }
 
 const StyledInput = styled.input`
   box-sizing: border-box;
-  width: 100%;
+  width: 95%;
 `;
 
 export default Board;
