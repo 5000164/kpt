@@ -7,7 +7,7 @@ import akka.http.scaladsl.server.Directives._
 import akka.stream.scaladsl.{Flow, GraphDSL, Merge, Sink, Source}
 import akka.stream.{ActorMaterializer, FlowShape, OverflowStrategy}
 import akka.util.ByteString
-import myproto.item.Item
+import proto.server.item.Item
 
 import scala.collection.mutable
 import scala.concurrent.ExecutionContextExecutor
@@ -15,8 +15,8 @@ import scala.io.StdIn
 
 object WebServer {
   def main(args: Array[String]) {
-    implicit val system: ActorSystem = ActorSystem()
-    implicit val materializer: ActorMaterializer = ActorMaterializer()
+    implicit val system: ActorSystem                        = ActorSystem()
+    implicit val materializer: ActorMaterializer            = ActorMaterializer()
     implicit val executionContext: ExecutionContextExecutor = system.dispatcher
 
     case class Subscribe(id: String, actorRef: ActorRef)
@@ -27,8 +27,8 @@ object WebServer {
 
       def receive: Receive = {
         case Subscribe(id, actorRef) => subscribers += ((id, actorRef))
-        case UnSubscribe(id) => subscribers -= id
-        case item: Item => subscribers.values.foreach(_ ! item)
+        case UnSubscribe(id)         => subscribers -= id
+        case item: Item              => subscribers.values.foreach(_ ! item)
       }
     }
     val broadcastActor = system.actorOf(Props[BroadcastActor])
@@ -40,9 +40,9 @@ object WebServer {
         val websocketSource = builder.add(Flow[Message].map {
           case BinaryMessage.Strict(message) => Item.parseFrom(message.toArray)
         })
-        val uuid = UUID.randomUUID().toString
-        val connActorSource = builder.materializedValue.map[Any](Subscribe(uuid, _))
-        val merge = builder.add(Merge[Any](2))
+        val uuid               = UUID.randomUUID().toString
+        val connActorSource    = builder.materializedValue.map[Any](Subscribe(uuid, _))
+        val merge              = builder.add(Merge[Any](2))
         val broadcastActorSink = Sink.actorRef(broadcastActor, UnSubscribe(uuid))
 
         websocketSource ~> merge ~> broadcastActorSink
