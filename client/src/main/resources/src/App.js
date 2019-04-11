@@ -21,6 +21,7 @@ class Board extends Component {
     this.handleChange = this.handleChange.bind(this);
     this.handleKeyDown = this.handleKeyDown.bind(this);
     this.handleClick = this.handleClick.bind(this);
+    this.handleClickExport = this.handleClickExport.bind(this);
   }
 
   componentDidMount() {
@@ -82,6 +83,22 @@ class Board extends Component {
     this.worker.postMessage(data, [data.buffer]);
   }
 
+  handleClickExport() {
+    const groups = this.state.groups;
+    const keepContents = '- ' + groups.keep.join('\n- ');
+    const problemContents = '- ' + groups.problem.join('\n- ');
+    const tryContents = '- ' + groups.try.join('\n- ');
+    const contents = `# Keep\n\n${keepContents}\n\n# Problem\n\n${problemContents}\n\n# Try\n\n${tryContents}`;
+
+    const textarea = document.createElement('textarea');
+    textarea.textContent = contents;
+    const body = document.getElementsByTagName('body')[0];
+    body.appendChild(textarea);
+    textarea.select();
+    document.execCommand("copy");
+    body.removeChild(textarea);
+  }
+
   render() {
     return (
       <>
@@ -94,6 +111,7 @@ class Board extends Component {
           <Group name={'try'} value={this.state.groups['try']} handleChange={this.handleChange}
                  handleKeyDown={this.handleKeyDown} handleClick={this.handleClick}/>
         </Wrapper>
+        <div onClick={this.handleClickExport}>Export</div>
       </>
     )
   }
