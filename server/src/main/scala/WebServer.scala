@@ -58,10 +58,10 @@ object WebServer {
 
     val route =
       pathEndOrSingleSlash {
-        getFromFile("client/src/main/resources/build/index.html")
+        getFromResource("build/index.html")
       } ~
         pathPrefix("") {
-          getFromDirectory("client/src/main/resources/build")
+          getFromResourceDirectory("build")
         } ~
         path("connect") {
           handleWebSocketMessages(flow)
