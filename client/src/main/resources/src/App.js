@@ -52,7 +52,7 @@ class Board extends Component {
   }
 
   handleKeyDown(event, name) {
-    if (event.key === 'Enter') {
+    if (event.keyCode === 13) {
       const groups = this.state.groups;
       const values = groups[name];
       values.push('');
