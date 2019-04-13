@@ -1,3 +1,4 @@
+import java.net.InetAddress
 import java.util.UUID
 
 import akka.actor.{Actor, ActorRef, ActorSystem, Props}
@@ -58,18 +59,19 @@ object WebServer {
 
     val route =
       pathEndOrSingleSlash {
-        getFromFile("client/src/main/resources/build/index.html")
+        getFromResource("build/index.html")
       } ~
         pathPrefix("") {
-          getFromDirectory("client/src/main/resources/build")
+          getFromResourceDirectory("build")
         } ~
         path("connect") {
           handleWebSocketMessages(flow)
         }
+    val host          = "0.0.0.0"
+    val port          = 8080
+    val bindingFuture = Http().bindAndHandle(route, host, port)
 
-    val bindingFuture = Http().bindAndHandle(route, "localhost", 8080)
-
-    println(s"Server online at http://127.0.0.1:8080/\nPress RETURN to stop...")
+    println(s"Server online at http://${InetAddress.getLocalHost.getHostAddress}:$port/\nPress RETURN to stop...")
     StdIn.readLine()
     bindingFuture
       .flatMap(_.unbind())
