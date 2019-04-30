@@ -2,7 +2,7 @@ import sbtcrossproject.CrossPlugin.autoImport.{CrossType, crossProject}
 
 ThisBuild / organization := "jp.5000164"
 ThisBuild / scalaVersion := "2.12.8"
-ThisBuild / version := "1.0.0"
+ThisBuild / version := "1.0.1"
 
 lazy val proto = crossProject(JVMPlatform, JSPlatform)
   .crossType(CrossType.Pure)
