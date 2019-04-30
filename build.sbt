@@ -35,7 +35,7 @@ lazy val client = project
   .settings(
     name := "client",
     libraryDependencies ++= Seq(
-      "org.scala-js" %%% "scalajs-dom" % "0.9.6"
+      "org.scala-js" %%% "scalajs-dom" % "0.9.7"
     ),
     excludeFilter in unmanagedResources := ((Compile / baseDirectory).value / "src" / "main" / "resources").getName,
     Compile / fastOptJS / artifactPath := (Compile / fastOptJS / target).value / ".." / "src" / "main" / "resources" / "public" / "worker.js",
