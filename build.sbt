@@ -2,7 +2,7 @@ import sbtcrossproject.CrossPlugin.autoImport.{CrossType, crossProject}
 
 ThisBuild / organization := "jp.5000164"
 ThisBuild / scalaVersion := "2.12.8"
-ThisBuild / version := "1.0.0"
+ThisBuild / version := "1.0.1"
 
 lazy val proto = crossProject(JVMPlatform, JSPlatform)
   .crossType(CrossType.Pure)
@@ -35,7 +35,7 @@ lazy val client = project
   .settings(
     name := "client",
     libraryDependencies ++= Seq(
-      "org.scala-js" %%% "scalajs-dom" % "0.9.6"
+      "org.scala-js" %%% "scalajs-dom" % "0.9.7"
     ),
     excludeFilter in unmanagedResources := ((Compile / baseDirectory).value / "src" / "main" / "resources").getName,
     Compile / fastOptJS / artifactPath := (Compile / fastOptJS / target).value / ".." / "src" / "main" / "resources" / "public" / "worker.js",

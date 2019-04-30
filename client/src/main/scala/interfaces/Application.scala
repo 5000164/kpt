@@ -9,7 +9,7 @@ import scala.scalajs.js
 object Application {
   def main(args: Array[String]): Unit = {
     val self   = js.Dynamic.global
-    val socket = new dom.WebSocket("ws://127.0.0.1:8080/connect")
+    val socket = new dom.WebSocket(s"ws://${self.location.hostname}:8080/connect")
     socket.binaryType = "arraybuffer"
 
     self.onmessage = (event: dom.MessageEvent) => {
