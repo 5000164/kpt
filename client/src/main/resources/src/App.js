@@ -42,13 +42,6 @@ class Board extends Component {
     values[i] = event.target.value
     groups[name] = values
     this.setState({ groups: groups })
-
-    const message = proto.client.Groups.create({ keep: groups.keep, problem: groups.problem, try: groups.try })
-    // I make a new object to use transfer.
-    // If I don't copy, an error happens in the second time (because of a buffer pool probably).
-    // See https://qiita.com/Quramy/items/8c12e6c3ad208c97c99a about performance.
-    const data = new Uint8Array(proto.client.Groups.encode(message).finish())
-    this.worker.postMessage(data, [data.buffer])
   }
 
   handleKeyDown(event, name) {
