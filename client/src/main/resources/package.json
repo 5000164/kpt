@@ -1,7 +1,13 @@
 {
   "name": "resources",
-  "version": "1.0.1",
   "private": true,
+  "version": "1.0.1",
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build && rm -rf ../../../../server/src/main/resources/build && mv build ../../../../server/src/main/resources/",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
   "dependencies": {
     "protobufjs": "^6.8.8",
     "react": "^16.8.3",
@@ -9,14 +15,8 @@
     "react-scripts": "2.1.5",
     "styled-components": "^4.2.0"
   },
-  "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build && rm -rf ../../../../server/src/main/resources/build && mv build ../../../../server/src/main/resources/",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
-  },
-  "eslintConfig": {
-    "extends": "react-app"
+  "devDependencies": {
+    "prettier": "1.17.1"
   },
   "browserslist": [
     ">0.2%",
