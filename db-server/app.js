@@ -14,7 +14,7 @@ const Kpt = mongoose.model("Kpt", kptSchema)
 app.use(bodyParser.json())
 
 app.post("/create", async (req, res) => {
-  await mongoose.connect("mongodb://127.0.0.1:27017/kpt", {
+  await mongoose.connect("mongodb://db:27017/kpt", {
     useNewUrlParser: true,
   })
 
@@ -25,7 +25,7 @@ app.post("/create", async (req, res) => {
 })
 
 app.post("/getList", async (req, res) => {
-  await mongoose.connect("mongodb://127.0.0.1:27017/kpt", {
+  await mongoose.connect("mongodb://db:27017/kpt", {
     useNewUrlParser: true,
   })
 
