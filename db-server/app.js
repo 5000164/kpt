@@ -14,7 +14,9 @@ const Kpt = mongoose.model("Kpt", kptSchema)
 app.use(bodyParser.json())
 
 app.post("/create", async (req, res) => {
-  await mongoose.connect("mongodb://127.0.0.1:27017/kpt", { useNewUrlParser: true })
+  await mongoose.connect("mongodb://127.0.0.1:27017/kpt", {
+    useNewUrlParser: true,
+  })
 
   const kpt = new Kpt(req.body)
   await kpt.save()
@@ -23,7 +25,9 @@ app.post("/create", async (req, res) => {
 })
 
 app.post("/getList", async (req, res) => {
-  await mongoose.connect("mongodb://127.0.0.1:27017/kpt", { useNewUrlParser: true })
+  await mongoose.connect("mongodb://127.0.0.1:27017/kpt", {
+    useNewUrlParser: true,
+  })
 
   const result = await Kpt.find({}).exec()
 
