@@ -4,7 +4,7 @@
   "main": "app.js",
   "scripts": {
     "start": "node-dev app.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha"
   },
   "dependencies": {
     "body-parser": "^1.19.0",
@@ -13,6 +13,9 @@
     "mongoose": "^5.5.10"
   },
   "devDependencies": {
+    "intelli-espower-loader": "^1.0.1",
+    "mocha": "^6.1.4",
+    "power-assert": "^1.6.1",
     "prettier": "1.17.1"
   }
 }
