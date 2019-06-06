@@ -4,12 +4,7 @@ const mongoose = require("mongoose")
 const app = express()
 const port = 8081
 
-const kptSchema = new mongoose.Schema({
-  keep: [String],
-  problem: [String],
-  try: [String],
-})
-const Kpt = mongoose.model("Kpt", kptSchema)
+const Kpt = require("./schemas/KptSchema")
 
 app.use(bodyParser.json())
 
