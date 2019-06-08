@@ -88,6 +88,26 @@ describe("KPT", () => {
         problem: ["problem1"],
         try: ["try1"],
       })
+
+      assert.deepStrictEqual(
+        (await Kpt.find({})).map(d =>
+          d.toJSON({
+            transform: (doc, ret, options) => {
+              delete ret._id
+              return ret
+            },
+            versionKey: false,
+          })
+        ),
+        [
+          {
+            keep: ["keep1"],
+            problem: ["problem1"],
+            try: ["try1"],
+          },
+        ]
+      )
+
       await axios.post("http://127.0.0.1:8081/create", {
         keep: ["keep2"],
         problem: ["problem2"],
