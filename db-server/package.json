@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "main": "app.js",
   "scripts": {
-    "start": "node-dev app.js",
+    "start": "node-dev --inspect=0.0.0.0 app.js",
     "test": "mocha"
   },
   "dependencies": {
