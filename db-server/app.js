@@ -24,9 +24,17 @@ app.post("/getList", async (req, res) => {
     useNewUrlParser: true,
   })
 
-  const result = await Kpt.find({}).exec()
+  const result = (await Kpt.find({})).map(d =>
+    d.toJSON({
+      transform: (doc, ret, options) => {
+        delete ret._id
+        return ret
+      },
+      versionKey: false,
+    })
+  )
 
-  res.send(result)
+  res.json(result)
 })
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`))
