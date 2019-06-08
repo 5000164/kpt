@@ -26,7 +26,7 @@ app.post("/getList", async (req, res) => {
 
   const result = (await Kpt.find({})).map(d =>
     d.toJSON({
-      transform: (doc, ret, options) => {
+      transform: (doc, ret, _) => {
         delete ret._id
         return ret
       },

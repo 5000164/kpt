@@ -34,7 +34,7 @@ describe("KPT", () => {
       assert.deepStrictEqual(
         (await Kpt.find({})).map(d =>
           d.toJSON({
-            transform: (doc, ret, options) => {
+            transform: (doc, ret, _) => {
               delete ret._id
               return ret
             },
@@ -63,7 +63,7 @@ describe("KPT", () => {
       assert.deepStrictEqual(
         (await Kpt.find({})).map(d =>
           d.toJSON({
-            transform: (doc, ret, options) => {
+            transform: (doc, ret, _) => {
               delete ret._id
               return ret
             },
@@ -92,7 +92,7 @@ describe("KPT", () => {
       assert.deepStrictEqual(
         (await Kpt.find({})).map(d =>
           d.toJSON({
-            transform: (doc, ret, options) => {
+            transform: (doc, ret, _) => {
               delete ret._id
               return ret
             },
@@ -117,7 +117,7 @@ describe("KPT", () => {
       assert.deepStrictEqual(
         (await Kpt.find({})).map(d =>
           d.toJSON({
-            transform: (doc, ret, options) => {
+            transform: (doc, ret, _) => {
               delete ret._id
               return ret
             },
