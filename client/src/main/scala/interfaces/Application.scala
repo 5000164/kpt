@@ -32,5 +32,9 @@ object Application {
       val data    = new js.typedarray.Uint8Array(intData)
       self.postMessage(data, js.Array(data.buffer))
     }
+
+    socket.onclose = { _: dom.CloseEvent =>
+      println("The connection has been closed.")
+    }
   }
 }
