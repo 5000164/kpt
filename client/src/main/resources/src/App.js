@@ -2,12 +2,6 @@ import React, { Component } from "react"
 import { proto } from "./modules/bundle"
 import styled, { createGlobalStyle } from "styled-components"
 
-const GlobalStyle = createGlobalStyle`
-  body {
-    margin: 0;
-  }
-`
-
 class Board extends Component {
   constructor(props) {
     super(props)
@@ -109,6 +103,12 @@ class Board extends Component {
     )
   }
 }
+
+const GlobalStyle = createGlobalStyle`
+  body {
+    margin: 0;
+  }
+`
 
 const Wrapper = styled.div`
   display: grid;
