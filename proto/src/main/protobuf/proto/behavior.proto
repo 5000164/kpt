@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+package proto;
+
+message Behavior {
+    enum Behavior {
+        UPDATE = 0;
+    }
+    Behavior behavior = 1;
+}

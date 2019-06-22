@@ -6,7 +6,7 @@ class Board extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      groups: {
+      contents: {
         keep: [""],
         problem: [""],
         try: [""],
@@ -21,8 +21,11 @@ class Board extends Component {
   componentDidMount() {
     this.worker = new Worker("worker.js")
     this.worker.onmessage = e => {
-      const groups = proto.client.Groups.decode(e.data)
-      this.setState({ groups: groups })
+      const behavior = proto.Behavior.decode(e.data[0])
+      if (behavior.behavior === proto.Behavior.Behavior.UPDATE) {
+        const contents = proto.Contents.decode(e.data[1])
+        this.setState({ contents })
+      }
     }
   }
 
@@ -31,54 +34,76 @@ class Board extends Component {
   }
 
   handleChange(event, name, i) {
-    const groups = this.state.groups
-    const values = groups[name].slice()
+    const contents = this.state.contents
+    const values = contents[name].slice()
     values[i] = event.target.value
-    groups[name] = values
-    this.setState({ groups: groups })
+    contents[name] = values
+    this.setState({ contents: contents })
   }
 
   handleKeyDown(event, name) {
     if (event.keyCode === 13) {
-      const groups = this.state.groups
-      const values = groups[name]
+      const contents = this.state.contents
+      const values = contents[name]
       values.push("")
-      groups[name] = values
-      this.setState({ groups: groups })
+      contents[name] = values
+      this.setState({ contents })
 
-      const message = proto.client.Groups.create({ keep: groups.keep, problem: groups.problem, try: groups.try })
-      // I make a new object to use transfer.
-      // If I don't copy, an error happens in the second time (because of a buffer pool probably).
-      // See https://qiita.com/Quramy/items/8c12e6c3ad208c97c99a about performance.
-      const data = new Uint8Array(proto.client.Groups.encode(message).finish())
-      this.worker.postMessage(data, [data.buffer])
+      const protoBehavior = proto.Behavior.create({
+        behavior: proto.Behavior.Behavior.UPDATE,
+      })
+      const protoContents = proto.Contents.create({
+        keep: contents.keep,
+        problem: contents.problem,
+        try: contents.try,
+      })
+      const behavior = new Uint8Array(proto.Behavior.encode(protoBehavior).finish())
+      const data = new Uint8Array(proto.Contents.encode(protoContents).finish())
+      this.worker.postMessage(
+        {
+          behavior,
+          data,
+        },
+        [behavior.buffer, data.buffer]
+      )
     }
   }
 
   handleClick(event, name, i) {
-    const groups = this.state.groups
-    const values = groups[name]
+    const contents = this.state.contents
+    const values = contents[name]
     values.splice(i, 1)
-    groups[name] = values
-    this.setState({ groups: groups })
+    contents[name] = values
+    this.setState({ contents })
 
-    const message = proto.client.Groups.create({ keep: groups.keep, problem: groups.problem, try: groups.try })
-    // I make a new object to use transfer.
-    // If I don't copy, an error happens in the second time (because of a buffer pool probably).
-    // See https://qiita.com/Quramy/items/8c12e6c3ad208c97c99a about performance.
-    const data = new Uint8Array(proto.client.Groups.encode(message).finish())
-    this.worker.postMessage(data, [data.buffer])
+    const protoBehavior = proto.Behavior.create({
+      behavior: proto.Behavior.Behavior.UPDATE,
+    })
+    const protoContents = proto.Contents.create({
+      keep: contents.keep,
+      problem: contents.problem,
+      try: contents.try,
+    })
+    const behavior = new Uint8Array(proto.Behavior.encode(protoBehavior).finish())
+    const data = new Uint8Array(proto.Contents.encode(protoContents).finish())
+    this.worker.postMessage(
+      {
+        behavior,
+        data,
+      },
+      [behavior.buffer, data.buffer]
+    )
   }
 
   handleClickExport() {
-    const groups = this.state.groups
-    const keepContents = "- " + groups.keep.join("\n- ")
-    const problemContents = "- " + groups.problem.join("\n- ")
-    const tryContents = "- " + groups.try.join("\n- ")
-    const contents = `# Keep\n\n${keepContents}\n\n# Problem\n\n${problemContents}\n\n# Try\n\n${tryContents}`
+    const contents = this.state.contents
+    const keepContents = "- " + contents.keep.join("\n- ")
+    const problemContents = "- " + contents.problem.join("\n- ")
+    const tryContents = "- " + contents.try.join("\n- ")
+    const serialized = `# Keep\n\n${keepContents}\n\n# Problem\n\n${problemContents}\n\n# Try\n\n${tryContents}`
 
     const textarea = document.createElement("textarea")
-    textarea.textContent = contents
+    textarea.textContent = serialized
     const body = document.getElementsByTagName("body")[0]
     body.appendChild(textarea)
     textarea.select()
@@ -93,21 +118,21 @@ class Board extends Component {
         <Wrapper>
           <Group
             name={"keep"}
-            value={this.state.groups["keep"]}
+            value={this.state.contents["keep"]}
             handleChange={this.handleChange}
             handleKeyDown={this.handleKeyDown}
             handleClick={this.handleClick}
           />
           <Group
             name={"problem"}
-            value={this.state.groups["problem"]}
+            value={this.state.contents["problem"]}
             handleChange={this.handleChange}
             handleKeyDown={this.handleKeyDown}
             handleClick={this.handleClick}
           />
           <Group
             name={"try"}
-            value={this.state.groups["try"]}
+            value={this.state.contents["try"]}
             handleChange={this.handleChange}
             handleKeyDown={this.handleKeyDown}
             handleClick={this.handleClick}

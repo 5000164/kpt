@@ -1,8 +1,8 @@
 package interfaces
 
 import org.scalajs.dom
-import proto.client.groups.Groups
-import proto.server.item.Item
+import proto.behavior.Behavior
+import proto.contents.Contents
 
 import scala.scalajs.js
 
@@ -13,28 +13,62 @@ object Application {
     socket.binaryType = "arraybuffer"
 
     self.onmessage = (event: dom.MessageEvent) => {
-      val data = event.data.asInstanceOf[js.typedarray.Uint8Array]
-      // To use int8Array2ByteArray function.
-      // I think that probably Protocol Buffers doesn't care about defined or undefined.
-      // (Probably) An important thing is a binary array.
-      val intData = new js.typedarray.Int8Array(data)
-      val groups  = Groups.parseFrom(js.typedarray.int8Array2ByteArray(intData))
-      val item    = Item(groups.keep, groups.problem, groups.`try`)
-      socket.send(js.typedarray.byteArray2Int8Array(item.toByteArray).buffer)
+      val behavior              = Behavior.parseFrom(js.typedarray.int8Array2ByteArray(new js.typedarray.Int8Array(event.data.asInstanceOf[Receiver].behavior)))
+      val behaviorInt8Array     = js.typedarray.byteArray2Int8Array(behavior.toByteArray)
+      val behaviorSizeInt8Array = new js.typedarray.Int8Array(1)
+      behaviorSizeInt8Array(0) = behaviorInt8Array.byteLength.toOctalString.toByte
+      behavior.behavior match {
+        case Behavior.Behavior.UPDATE =>
+          val contents =
+            Contents.parseFrom(js.typedarray.int8Array2ByteArray(new js.typedarray.Int8Array(event.data.asInstanceOf[Receiver].data)))
+          val contentsInt8Array = js.typedarray.byteArray2Int8Array(contents.toByteArray)
+
+          val data = new js.typedarray.Int8Array(behaviorSizeInt8Array.byteLength + behaviorInt8Array.byteLength + contentsInt8Array.byteLength)
+          var i    = 0
+          behaviorSizeInt8Array.foreach(d => {
+            data(i) = d
+            i = i + 1
+          })
+          behaviorInt8Array.foreach(d => {
+            data(i) = d
+            i = i + 1
+          })
+          contentsInt8Array.foreach(d => {
+            data(i) = d
+            i = i + 1
+          })
+          socket.send(data.buffer)
+        case _ =>
+      }
     }
 
     socket.onmessage = { e: dom.MessageEvent =>
-      val item = e.data match {
-        case buf: js.typedarray.ArrayBuffer => Item.parseFrom(js.typedarray.int8Array2ByteArray(new js.typedarray.Int8Array(buf)))
+      e.data match {
+        case buf: js.typedarray.ArrayBuffer =>
+          val behaviorSizeInt8Array = new js.typedarray.Int8Array(buf.slice(0, 1))
+          val behaviorSize          = java.lang.Integer.parseInt(behaviorSizeInt8Array(0).toString, 8)
+          val behaviorInt8Array     = new js.typedarray.Int8Array(buf.slice(1, behaviorSize + 1))
+          val behavior              = Behavior.parseFrom(js.typedarray.int8Array2ByteArray(behaviorInt8Array))
+          behavior.behavior match {
+            case Behavior.Behavior.UPDATE =>
+              val contentsInt8Array = new js.typedarray.Int8Array(buf.slice(behaviorSize + 1, buf.byteLength))
+              val sendBehavior      = new js.typedarray.Uint8Array(behaviorInt8Array)
+              val sendData          = new js.typedarray.Uint8Array(contentsInt8Array)
+              self.postMessage(js.Array(sendBehavior, sendData), js.Array(sendBehavior.buffer, sendData.buffer))
+            case _ =>
+          }
+        case _ =>
       }
-      val groups  = Groups(item.keep, item.problem, item.`try`)
-      val intData = js.typedarray.byteArray2Int8Array(groups.toByteArray)
-      val data    = new js.typedarray.Uint8Array(intData)
-      self.postMessage(data, js.Array(data.buffer))
     }
 
     socket.onclose = { _: dom.CloseEvent =>
       println("The connection has been closed.")
     }
   }
+}
+
+@js.native
+trait Receiver extends js.Object {
+  val behavior: js.typedarray.Uint8Array = js.native
+  val data: js.typedarray.Uint8Array     = js.native
 }

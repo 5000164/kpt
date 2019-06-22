@@ -8,7 +8,8 @@ import akka.http.scaladsl.server.Directives._
 import akka.stream.scaladsl.{Flow, GraphDSL, Merge, Sink, Source}
 import akka.stream.{ActorMaterializer, FlowShape, OverflowStrategy}
 import akka.util.ByteString
-import proto.server.item.Item
+import proto.behavior.Behavior
+import proto.contents.Contents
 
 import scala.collection.mutable
 import scala.concurrent.ExecutionContextExecutor
@@ -29,17 +30,31 @@ object WebServer {
       def receive: Receive = {
         case Subscribe(id, actorRef) => subscribers += ((id, actorRef))
         case UnSubscribe(id)         => subscribers -= id
-        case item: Item              => subscribers.values.foreach(_ ! item)
+        case (behavior: Behavior, contents: Contents) =>
+          subscribers.values.foreach(_ ! ((behavior, contents)))
+        case _ =>
       }
     }
     val broadcastActor = system.actorOf(Props[BroadcastActor])
 
     def flow: Flow[Message, Message, Any] = {
-      Flow.fromGraph(GraphDSL.create(Source.actorRef[Item](bufferSize = 3, OverflowStrategy.fail)) { implicit builder => subscribeActor =>
+      Flow.fromGraph(GraphDSL.create(Source.actorRef[(Behavior, Any)](bufferSize = 3, OverflowStrategy.fail)) { implicit builder => subscribeActor =>
         import GraphDSL.Implicits._
 
         val websocketSource = builder.add(Flow[Message].map {
-          case BinaryMessage.Strict(message) => Item.parseFrom(message.toArray)
+          case BinaryMessage.Strict(message) =>
+            val binaryArray   = message.toArray
+            val behaviorSize  = java.lang.Integer.parseInt(binaryArray.take(1)(0).toString, 8)
+            val behaviorArray = binaryArray.slice(1, behaviorSize + 1)
+            val behavior      = Behavior.parseFrom(behaviorArray)
+            behavior.behavior match {
+              case Behavior.Behavior.UPDATE =>
+                val contentsArray = binaryArray.drop(1 + behaviorSize)
+                val contents      = Contents.parseFrom(contentsArray)
+                (behavior, contents)
+              case _ =>
+            }
+          case _ =>
         })
         val uuid               = UUID.randomUUID().toString
         val connActorSource    = builder.materializedValue.map[Any](Subscribe(uuid, _))
@@ -49,7 +64,17 @@ object WebServer {
         websocketSource ~> merge ~> broadcastActorSink
         connActorSource ~> merge
 
-        val output = builder.add(Flow[Item].map(item => BinaryMessage(ByteString(item.toByteArray))))
+        val output = builder.add(Flow[(Behavior, Any)].map(data => {
+          val behavior         = data._1
+          val behaviorSizeByte = behavior.toByteArray.length.toByte
+          behavior.behavior match {
+            case Behavior.Behavior.UPDATE =>
+              val contents  = data._2.asInstanceOf[Contents]
+              val byteArray = Array(behaviorSizeByte) ++ behavior.toByteArray ++ contents.toByteArray
+              BinaryMessage(ByteString(byteArray))
+            case _ => BinaryMessage(ByteString())
+          }
+        }))
 
         subscribeActor ~> output
 
