@@ -89,14 +89,29 @@ class Board extends Component {
   render() {
     return (
       <>
-        <GlobalStyle/>
+        <GlobalStyle />
         <Wrapper>
-          <Group name={"keep"} value={this.state.groups["keep"]} handleChange={this.handleChange}
-                 handleKeyDown={this.handleKeyDown} handleClick={this.handleClick}/>
-          <Group name={"problem"} value={this.state.groups["problem"]} handleChange={this.handleChange}
-                 handleKeyDown={this.handleKeyDown} handleClick={this.handleClick}/>
-          <Group name={"try"} value={this.state.groups["try"]} handleChange={this.handleChange}
-                 handleKeyDown={this.handleKeyDown} handleClick={this.handleClick}/>
+          <Group
+            name={"keep"}
+            value={this.state.groups["keep"]}
+            handleChange={this.handleChange}
+            handleKeyDown={this.handleKeyDown}
+            handleClick={this.handleClick}
+          />
+          <Group
+            name={"problem"}
+            value={this.state.groups["problem"]}
+            handleChange={this.handleChange}
+            handleKeyDown={this.handleKeyDown}
+            handleClick={this.handleClick}
+          />
+          <Group
+            name={"try"}
+            value={this.state.groups["try"]}
+            handleChange={this.handleChange}
+            handleKeyDown={this.handleKeyDown}
+            handleClick={this.handleClick}
+          />
         </Wrapper>
         <div onClick={this.handleClickExport}>Export</div>
       </>
@@ -128,10 +143,15 @@ class Group extends Component {
       <StyledGroup ref={this.ref}>
         <h1>{this.props.name}</h1>
         {this.props.value.map((content, i) => {
-          return <InputField key={i} value={content}
-                             handleChange={(e) => this.props.handleChange(e, this.props.name, i)}
-                             handleKeyDown={(e) => this.props.handleKeyDown(e, this.props.name)}
-                             handleClick={(e) => this.props.handleClick(e, this.props.name, i)}/>
+          return (
+            <InputField
+              key={i}
+              value={content}
+              handleChange={e => this.props.handleChange(e, this.props.name, i)}
+              handleKeyDown={e => this.props.handleKeyDown(e, this.props.name)}
+              handleClick={e => this.props.handleClick(e, this.props.name, i)}
+            />
+          )
         })}
       </StyledGroup>
     )
@@ -146,8 +166,12 @@ class InputField extends Component {
   render() {
     return (
       <>
-        <StyledInput type="text" value={this.props.value} onChange={this.props.handleChange}
-                     onKeyDown={this.props.handleKeyDown}/>
+        <StyledInput
+          type="text"
+          value={this.props.value}
+          onChange={this.props.handleChange}
+          onKeyDown={this.props.handleKeyDown}
+        />
         <span onClick={this.props.handleClick}>x</span>
       </>
     )
