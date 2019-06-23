@@ -24,14 +24,7 @@ app.post("/getList", async (req, res) => {
     useNewUrlParser: true,
   })
 
-  const result = (await Kpt.find({})).map(d =>
-    d.toJSON({
-      transform: (doc, ret, _) => {
-        delete ret._id
-        return ret
-      },
-    })
-  )
+  const result = await Kpt.find({}).lean()
 
   res.json(result)
 })

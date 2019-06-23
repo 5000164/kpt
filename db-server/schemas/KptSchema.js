@@ -8,6 +8,10 @@ const kptSchema = new mongoose.Schema(
   },
   {
     versionKey: false,
+    timestamps: {
+      createdAt: "created_at",
+      updatedAt: "updated_at",
+    },
   }
 )
 const Kpt = mongoose.model("Kpt", kptSchema)

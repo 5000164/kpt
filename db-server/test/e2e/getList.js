@@ -31,13 +31,10 @@ describe("getList", () => {
     })
     await kpt.save()
 
-    assert.deepStrictEqual((await axios.post("http://127.0.0.1:8081/getList")).data, [
-      {
-        keep: ["keep"],
-        problem: ["problem"],
-        try: ["try"],
-      },
-    ])
+    const d = (await axios.post("http://127.0.0.1:8081/getList")).data
+    assert.deepStrictEqual(d[0].keep, ["keep"])
+    assert.deepStrictEqual(d[0].problem, ["problem"])
+    assert.deepStrictEqual(d[0].try, ["try"])
   })
 
   it("multiple values", async () => {
@@ -55,18 +52,13 @@ describe("getList", () => {
     })
     await Promise.all([kpt1.save(), kpt2.save()])
 
-    assert.deepStrictEqual((await axios.post("http://127.0.0.1:8081/getList")).data, [
-      {
-        keep: ["keep1"],
-        problem: ["problem1"],
-        try: ["try1"],
-      },
-      {
-        keep: ["keep2"],
-        problem: ["problem2"],
-        try: ["try2"],
-      },
-    ])
+    const d = (await axios.post("http://127.0.0.1:8081/getList")).data
+    assert.deepStrictEqual(d[0].keep, ["keep1"])
+    assert.deepStrictEqual(d[0].problem, ["problem1"])
+    assert.deepStrictEqual(d[0].try, ["try1"])
+    assert.deepStrictEqual(d[1].keep, ["keep2"])
+    assert.deepStrictEqual(d[1].problem, ["problem2"])
+    assert.deepStrictEqual(d[1].try, ["try2"])
   })
 
   it("multiple times", async () => {
@@ -79,13 +71,10 @@ describe("getList", () => {
     })
     await kpt1.save()
 
-    assert.deepStrictEqual((await axios.post("http://127.0.0.1:8081/getList")).data, [
-      {
-        keep: ["keep1"],
-        problem: ["problem1"],
-        try: ["try1"],
-      },
-    ])
+    const d1 = (await axios.post("http://127.0.0.1:8081/getList")).data
+    assert.deepStrictEqual(d1[0].keep, ["keep1"])
+    assert.deepStrictEqual(d1[0].problem, ["problem1"])
+    assert.deepStrictEqual(d1[0].try, ["try1"])
 
     const kpt2 = new Kpt({
       keep: ["keep2"],
@@ -94,17 +83,12 @@ describe("getList", () => {
     })
     await kpt2.save()
 
-    assert.deepStrictEqual((await axios.post("http://127.0.0.1:8081/getList")).data, [
-      {
-        keep: ["keep1"],
-        problem: ["problem1"],
-        try: ["try1"],
-      },
-      {
-        keep: ["keep2"],
-        problem: ["problem2"],
-        try: ["try2"],
-      },
-    ])
+    const d2 = (await axios.post("http://127.0.0.1:8081/getList")).data
+    assert.deepStrictEqual(d2[0].keep, ["keep1"])
+    assert.deepStrictEqual(d2[0].problem, ["problem1"])
+    assert.deepStrictEqual(d2[0].try, ["try1"])
+    assert.deepStrictEqual(d2[1].keep, ["keep2"])
+    assert.deepStrictEqual(d2[1].problem, ["problem2"])
+    assert.deepStrictEqual(d2[1].try, ["try2"])
   })
 })
