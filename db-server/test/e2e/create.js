@@ -37,7 +37,6 @@ describe("create", () => {
             delete ret._id
             return ret
           },
-          versionKey: false,
         })
       ),
       [
@@ -66,7 +65,6 @@ describe("create", () => {
             delete ret._id
             return ret
           },
-          versionKey: false,
         })
       ),
       [
@@ -95,7 +93,6 @@ describe("create", () => {
             delete ret._id
             return ret
           },
-          versionKey: false,
         })
       ),
       [
@@ -120,7 +117,6 @@ describe("create", () => {
             delete ret._id
             return ret
           },
-          versionKey: false,
         })
       ),
       [

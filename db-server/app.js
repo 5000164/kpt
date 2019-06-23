@@ -30,7 +30,6 @@ app.post("/getList", async (req, res) => {
         delete ret._id
         return ret
       },
-      versionKey: false,
     })
   )
 
