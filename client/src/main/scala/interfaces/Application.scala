@@ -38,6 +38,38 @@ object Application {
             i = i + 1
           })
           socket.send(data.buffer)
+        case Behavior.Behavior.SAVE =>
+          val contents =
+            Contents.parseFrom(js.typedarray.int8Array2ByteArray(new js.typedarray.Int8Array(event.data.asInstanceOf[Receiver].data)))
+          val contentsInt8Array = js.typedarray.byteArray2Int8Array(contents.toByteArray)
+
+          val data = new js.typedarray.Int8Array(behaviorSizeInt8Array.byteLength + behaviorInt8Array.byteLength + contentsInt8Array.byteLength)
+          var i    = 0
+          behaviorSizeInt8Array.foreach(d => {
+            data(i) = d
+            i = i + 1
+          })
+          behaviorInt8Array.foreach(d => {
+            data(i) = d
+            i = i + 1
+          })
+          contentsInt8Array.foreach(d => {
+            data(i) = d
+            i = i + 1
+          })
+          socket.send(data.buffer)
+        case Behavior.Behavior.LOAD =>
+          val data = new js.typedarray.Int8Array(behaviorSizeInt8Array.byteLength + behaviorInt8Array.byteLength)
+          var i    = 0
+          behaviorSizeInt8Array.foreach(d => {
+            data(i) = d
+            i = i + 1
+          })
+          behaviorInt8Array.foreach(d => {
+            data(i) = d
+            i = i + 1
+          })
+          socket.send(data.buffer)
         case _ =>
       }
     }
@@ -49,10 +81,16 @@ object Application {
           val behaviorSize          = java.lang.Integer.parseInt(behaviorSizeInt8Array(0).toString, 8)
           val behaviorInt8Array     = new js.typedarray.Int8Array(buf.slice(1, behaviorSize + 1))
           val behavior              = Behavior.parseFrom(js.typedarray.int8Array2ByteArray(behaviorInt8Array))
+          val sendBehavior          = new js.typedarray.Uint8Array(behaviorInt8Array)
           behavior.behavior match {
             case Behavior.Behavior.UPDATE =>
               val contentsInt8Array = new js.typedarray.Int8Array(buf.slice(behaviorSize + 1, buf.byteLength))
-              val sendBehavior      = new js.typedarray.Uint8Array(behaviorInt8Array)
+              val sendData          = new js.typedarray.Uint8Array(contentsInt8Array)
+              self.postMessage(js.Array(sendBehavior, sendData), js.Array(sendBehavior.buffer, sendData.buffer))
+            case Behavior.Behavior.SAVE =>
+              self.postMessage(js.Array(sendBehavior), js.Array(sendBehavior.buffer))
+            case Behavior.Behavior.LOAD =>
+              val contentsInt8Array = new js.typedarray.Int8Array(buf.slice(behaviorSize + 1, buf.byteLength))
               val sendData          = new js.typedarray.Uint8Array(contentsInt8Array)
               self.postMessage(js.Array(sendBehavior, sendData), js.Array(sendBehavior.buffer, sendData.buffer))
             case _ =>

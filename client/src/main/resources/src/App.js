@@ -15,6 +15,8 @@ class Board extends Component {
     this.handleChange = this.handleChange.bind(this)
     this.handleKeyDown = this.handleKeyDown.bind(this)
     this.handleClick = this.handleClick.bind(this)
+    this.handleClickSave = this.handleClickSave.bind(this)
+    this.handleClickLoad = this.handleClickLoad.bind(this)
     this.handleClickExport = this.handleClickExport.bind(this)
   }
 
@@ -23,6 +25,11 @@ class Board extends Component {
     this.worker.onmessage = e => {
       const behavior = proto.Behavior.decode(e.data[0])
       if (behavior.behavior === proto.Behavior.Behavior.UPDATE) {
+        const contents = proto.Contents.decode(e.data[1])
+        this.setState({ contents })
+      } else if (behavior.behavior === proto.Behavior.Behavior.SAVE) {
+        console.log("success to save")
+      } else if (behavior.behavior === proto.Behavior.Behavior.LOAD) {
         const contents = proto.Contents.decode(e.data[1])
         this.setState({ contents })
       }
@@ -111,6 +118,35 @@ class Board extends Component {
     body.removeChild(textarea)
   }
 
+  handleClickSave() {
+    const contents = this.state.contents
+    const protoBehavior = proto.Behavior.create({
+      behavior: proto.Behavior.Behavior.SAVE,
+    })
+    const protoContents = proto.Contents.create({
+      keep: contents.keep,
+      problem: contents.problem,
+      try: contents.try,
+    })
+    const behavior = new Uint8Array(proto.Behavior.encode(protoBehavior).finish())
+    const data = new Uint8Array(proto.Contents.encode(protoContents).finish())
+    this.worker.postMessage(
+      {
+        behavior,
+        data,
+      },
+      [behavior.buffer, data.buffer]
+    )
+  }
+
+  handleClickLoad() {
+    const protoBehavior = proto.Behavior.create({
+      behavior: proto.Behavior.Behavior.LOAD,
+    })
+    const behavior = new Uint8Array(proto.Behavior.encode(protoBehavior).finish())
+    this.worker.postMessage({ behavior }, [behavior.buffer])
+  }
+
   render() {
     return (
       <>
@@ -138,6 +174,8 @@ class Board extends Component {
             handleClick={this.handleClick}
           />
         </Wrapper>
+        <div onClick={this.handleClickSave}>Save</div>
+        <div onClick={this.handleClickLoad}>Load</div>
         <div onClick={this.handleClickExport}>Export</div>
       </>
     )

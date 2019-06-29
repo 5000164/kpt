@@ -8,6 +8,11 @@ import akka.http.scaladsl.server.Directives._
 import akka.stream.scaladsl.{Flow, GraphDSL, Merge, Sink, Source}
 import akka.stream.{ActorMaterializer, FlowShape, OverflowStrategy}
 import akka.util.ByteString
+import com.softwaremill.sttp._
+import com.softwaremill.sttp.circe._
+import io.circe._
+import io.circe.generic.auto._
+import io.circe.generic.semiauto._
 import proto.behavior.Behavior
 import proto.contents.Contents
 
@@ -30,8 +35,34 @@ object WebServer {
       def receive: Receive = {
         case Subscribe(id, actorRef) => subscribers += ((id, actorRef))
         case UnSubscribe(id)         => subscribers -= id
-        case (behavior: Behavior, contents: Contents) =>
+        case (behavior: Behavior, contents: Contents) if behavior.behavior == Behavior.Behavior.UPDATE =>
           subscribers.values.foreach(_ ! ((behavior, contents)))
+        case (behavior: Behavior, contents: Contents) if behavior.behavior == Behavior.Behavior.SAVE =>
+          implicit val backend: SttpBackend[Id, Nothing] = HttpURLConnectionBackend()
+          implicit val encoder: Encoder[Contents]        = deriveEncoder[Contents]
+          sttp
+            .post(uri"http://127.0.0.1:8081/create")
+            .body(contents)
+            .send()
+            .body match {
+            case Right(_) => subscribers.values.foreach(_ ! ((behavior, ())))
+            case Left(_)  =>
+          }
+        case behavior: Behavior if behavior.behavior == Behavior.Behavior.LOAD =>
+          implicit val backend: SttpBackend[Id, Nothing] = HttpURLConnectionBackend()
+          sttp
+            .post(uri"http://127.0.0.1:8081/getLatest")
+            .response(asJson[Contents])
+            .send()
+            .body match {
+            case Right(r) =>
+              r match {
+                case Right(contents) =>
+                  subscribers.values.foreach(_ ! ((behavior, contents)))
+                case Left(_) =>
+              }
+            case Left(_) =>
+          }
         case _ =>
       }
     }
@@ -52,7 +83,12 @@ object WebServer {
                 val contentsArray = binaryArray.drop(1 + behaviorSize)
                 val contents      = Contents.parseFrom(contentsArray)
                 (behavior, contents)
-              case _ =>
+              case Behavior.Behavior.SAVE =>
+                val contentsArray = binaryArray.drop(1 + behaviorSize)
+                val contents      = Contents.parseFrom(contentsArray)
+                (behavior, contents)
+              case Behavior.Behavior.LOAD => behavior
+              case _                      =>
             }
           case _ =>
         })
@@ -69,6 +105,13 @@ object WebServer {
           val behaviorSizeByte = behavior.toByteArray.length.toByte
           behavior.behavior match {
             case Behavior.Behavior.UPDATE =>
+              val contents  = data._2.asInstanceOf[Contents]
+              val byteArray = Array(behaviorSizeByte) ++ behavior.toByteArray ++ contents.toByteArray
+              BinaryMessage(ByteString(byteArray))
+            case Behavior.Behavior.SAVE =>
+              val byteArray = Array(behaviorSizeByte) ++ behavior.toByteArray
+              BinaryMessage(ByteString(byteArray))
+            case Behavior.Behavior.LOAD =>
               val contents  = data._2.asInstanceOf[Contents]
               val byteArray = Array(behaviorSizeByte) ++ behavior.toByteArray ++ contents.toByteArray
               BinaryMessage(ByteString(byteArray))
