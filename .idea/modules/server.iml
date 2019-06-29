@@ -16,6 +16,19 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="sbt: org.scala-lang.modules:scala-parser-combinators_2.12:1.1.1:jar" level="project" />
     <orderEntry type="module" module-name=".jvm-proto" exported="" />
+    <orderEntry type="library" name="sbt: org.typelevel:machinist_2.12:0.6.6:jar" level="project" />
+    <orderEntry type="library" name="sbt: org.typelevel:jawn-parser_2.12:0.14.1:jar" level="project" />
+    <orderEntry type="library" name="sbt: org.typelevel:cats-macros_2.12:1.5.0:jar" level="project" />
+    <orderEntry type="library" name="sbt: org.typelevel:cats-kernel_2.12:1.5.0:jar" level="project" />
+    <orderEntry type="library" name="sbt: org.typelevel:cats-core_2.12:1.5.0:jar" level="project" />
+    <orderEntry type="library" name="sbt: io.circe:circe-parser_2.12:0.11.1:jar" level="project" />
+    <orderEntry type="library" name="sbt: io.circe:circe-numbers_2.12:0.11.1:jar" level="project" />
+    <orderEntry type="library" name="sbt: io.circe:circe-jawn_2.12:0.11.1:jar" level="project" />
+    <orderEntry type="library" name="sbt: io.circe:circe-core_2.12:0.11.1:jar" level="project" />
+    <orderEntry type="library" name="sbt: com.softwaremill.sttp:json-common_2.12:1.6.0:jar" level="project" />
+    <orderEntry type="library" name="sbt: com.softwaremill.sttp:circe_2.12:1.6.0:jar" level="project" />
+    <orderEntry type="library" name="sbt: org.scala-lang:scala-reflect:2.12.8:jar" level="project" />
+    <orderEntry type="library" name="sbt: com.softwaremill.sttp:core_2.12:1.6.0:jar" level="project" />
     <orderEntry type="library" name="sbt: com.thesamet.scalapb:scalapb-runtime_2.12:0.8.2:jar" level="project" />
     <orderEntry type="library" name="sbt: com.thesamet.scalapb:lenses_2.12:0.8.2:jar" level="project" />
     <orderEntry type="library" name="sbt: com.lihaoyi:sourcecode_2.12:0.1.4:jar" level="project" />
@@ -33,5 +46,8 @@
     <orderEntry type="library" name="sbt: com.typesafe.akka:akka-actor_2.12:2.5.21:jar" level="project" />
     <orderEntry type="library" name="sbt: com.typesafe.akka:akka-protobuf_2.12:2.5.21:jar" level="project" />
     <orderEntry type="library" name="sbt: com.typesafe.akka:akka-stream_2.12:2.5.21:jar" level="project" />
+    <orderEntry type="library" name="sbt: com.chuusai:shapeless_2.12:2.3.3:jar" level="project" />
+    <orderEntry type="library" name="sbt: io.circe:circe-generic_2.12:0.10.0:jar" level="project" />
+    <orderEntry type="library" name="sbt: org.typelevel:macro-compat_2.12:1.1.1:jar" level="project" />
   </component>
 </module>
