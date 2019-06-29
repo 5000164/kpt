@@ -12,7 +12,7 @@ lazy val proto = crossProject(JVMPlatform, JSPlatform)
     ),
     PB.protoSources in Compile := Seq(file("proto/src/main/protobuf")),
     libraryDependencies ++= Seq(
-      "com.thesamet.scalapb" %%% "scalapb-runtime" % scalapb.compiler.Version.scalapbVersion // ,
+      "com.thesamet.scalapb" %%% "scalapb-runtime" % scalapb.compiler.Version.scalapbVersion
     )
   )
 
