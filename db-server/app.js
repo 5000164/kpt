@@ -19,20 +19,24 @@ app.post("/create", async (req, res) => {
   res.send()
 })
 
+app.post("/getLatest", async (req, res) => {
+  await mongoose.connect("mongodb://db:27017/kpt", {
+    useNewUrlParser: true,
+  })
+
+  const result = await Kpt.findOne({})
+    .sort({ created_at: -1 })
+    .lean()
+
+  res.json(result)
+})
+
 app.post("/getList", async (req, res) => {
   await mongoose.connect("mongodb://db:27017/kpt", {
     useNewUrlParser: true,
   })
 
-  const result = (await Kpt.find({})).map(d =>
-    d.toJSON({
-      transform: (doc, ret, _) => {
-        delete ret._id
-        return ret
-      },
-      versionKey: false,
-    })
-  )
+  const result = await Kpt.find({}).lean()
 
   res.json(result)
 })

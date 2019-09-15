@@ -12,7 +12,7 @@ lazy val proto = crossProject(JVMPlatform, JSPlatform)
     ),
     PB.protoSources in Compile := Seq(file("proto/src/main/protobuf")),
     libraryDependencies ++= Seq(
-      "com.thesamet.scalapb" %%% "scalapb-runtime" % scalapb.compiler.Version.scalapbVersion // ,
+      "com.thesamet.scalapb" %%% "scalapb-runtime" % scalapb.compiler.Version.scalapbVersion
     )
   )
 
@@ -23,8 +23,13 @@ lazy val server = project
   .settings(
     name := "server",
     libraryDependencies ++= Seq(
-      "com.typesafe.akka" %% "akka-http"   % "10.1.7",
-      "com.typesafe.akka" %% "akka-stream" % "2.5.21"
+      "com.typesafe.akka"     %% "akka-http"   % "10.1.7",
+      "com.typesafe.akka"     %% "akka-stream" % "2.5.21",
+      "com.softwaremill.sttp" %% "core"        % "1.6.0",
+      "com.softwaremill.sttp" %% "circe"       % "1.6.0",
+      "io.circe"              %% "circe-core"    % "0.10.0",
+      "io.circe"              %% "circe-generic" % "0.10.0",
+      "io.circe"              %% "circe-parser"  % "0.10.0"
     ),
     scalacOptions ++= Seq("-deprecation", "-feature", "-unchecked", "-Xlint")
   )
