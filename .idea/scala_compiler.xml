@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ScalaCompilerConfiguration">
     <option name="incrementalityType" value="SBT" />
-    <profile name="sbt 1" modules=".jvm-proto,common,kpt,kpt_1213" />
+    <profile name="sbt 1" modules=".jvm-proto,common,kpt,kpt_1213,protoJVM" />
     <profile name="sbt 2" modules="server">
       <option name="deprecationWarnings" value="true" />
       <option name="uncheckedWarnings" value="true" />
@@ -11,7 +11,7 @@
         <parameter value="-Xlint" />
       </parameters>
     </profile>
-    <profile name="sbt 4" modules=".js-proto,client">
+    <profile name="sbt 4" modules=".js-proto,client,protoJS">
       <plugins>
         <plugin path="$USER_HOME$/.ivy2/cache/org.scala-js/scalajs-compiler_2.12.8/jars/scalajs-compiler_2.12.8-0.6.27.jar" />
       </plugins>

@@ -2,12 +2,12 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/.js-proto.iml" filepath="$PROJECT_DIR$/.idea/modules/.js-proto.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/.jvm-proto.iml" filepath="$PROJECT_DIR$/.idea/modules/.jvm-proto.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/client.iml" filepath="$PROJECT_DIR$/.idea/modules/client.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/kpt.iml" filepath="$PROJECT_DIR$/.idea/modules/kpt.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/kpt-build.iml" filepath="$PROJECT_DIR$/.idea/modules/kpt-build.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/proto-sources.iml" filepath="$PROJECT_DIR$/.idea/modules/proto-sources.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/proto-sources.iml" filepath="$PROJECT_DIR$/.idea/modules/proto-sources.iml" group="proto" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/protoJS.iml" filepath="$PROJECT_DIR$/.idea/modules/protoJS.iml" group="proto" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/protoJVM.iml" filepath="$PROJECT_DIR$/.idea/modules/protoJVM.iml" group="proto" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/server.iml" filepath="$PROJECT_DIR$/.idea/modules/server.iml" />
     </modules>
   </component>

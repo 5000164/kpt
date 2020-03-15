@@ -6,8 +6,6 @@
     <exclude-output />
     <content url="file://$MODULE_DIR$/../../proto/.jvm">
       <sourceFolder url="file://$MODULE_DIR$/../../proto/.jvm/target/scala-2.12/src_managed/main" isTestSource="false" generated="true" />
-      <sourceFolder url="file://$MODULE_DIR$/../../proto/.jvm/target/scala-2.12/src_managed/test" isTestSource="true" generated="true" />
-      <excludeFolder url="file://$MODULE_DIR$/../../proto/.jvm/target" />
       <excludeFolder url="file://$MODULE_DIR$/../../proto/.jvm/target/protobuf_external" />
       <excludeFolder url="file://$MODULE_DIR$/../../proto/.jvm/target/streams" />
     </content>
